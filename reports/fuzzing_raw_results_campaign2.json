@@ -1,0 +1,1570 @@
+{
+  "campaign_metadata": {
+    "campaign": "Campaign 2",
+    "date": "2026-05-05",
+    "broker": "Eclipse Mosquitto 2.0.18",
+    "broker_container": "mqtt_target_broker",
+    "broker_port": 1883,
+    "broker_config": "permissive (allow_anonymous=true, no ACL, retained_persistence=true)",
+    "protocol_scope": "MQTT 3.1.1 + MQTT 5.0",
+    "tool": "MQTT Security Agent Campaign 2 (extended Python fuzzer)",
+    "categories_tested": [
+      "AUTH_BYPASS",
+      "TOPIC_NAMESPACE",
+      "QOS_ATTACK",
+      "SESSION_ATTACK",
+      "PAYLOAD_ATTACK",
+      "CONNECTION_ATTACK",
+      "SUBSCRIPTION_ABUSE",
+      "MQTT5_SPECIFIC",
+      "INFO_LEAKAGE",
+      "CONFIG_FINGERPRINT",
+      "WILL_ATTACK",
+      "RETAINED_ATTACK",
+      "TARGETED"
+    ]
+  },
+  "statistics": {
+    "total_tests": 84,
+    "anomalies_detected": 24,
+    "anomaly_rate": "28.6%",
+    "broker_alive_at_end": true,
+    "tests_by_category": {
+      "AUTH_BYPASS": 10,
+      "TOPIC_NAMESPACE": 13,
+      "QOS_ATTACK": 6,
+      "SESSION_ATTACK": 5,
+      "PAYLOAD_ATTACK": 12,
+      "CONNECTION_ATTACK": 5,
+      "SUBSCRIPTION_ABUSE": 4,
+      "MQTT5_SPECIFIC": 10,
+      "INFO_LEAKAGE": 4,
+      "CONFIG_FINGERPRINT": 5,
+      "WILL_ATTACK": 3,
+      "RETAINED_ATTACK": 2,
+      "TARGETED": 5
+    },
+    "anomaly_types": {
+      "NO_RESPONSE": 2,
+      "AUTH_ACCEPTED_ANOMALY": 7,
+      "SHARED_SUB_GRANTED": 6,
+      "INFO_DISCLOSURE": 3,
+      "PUBREL_ORPHAN": 1,
+      "QOS2_HANDLED_CORRECTLY": 1,
+      "INFLIGHT_FLOOD": 1,
+      "PUBACK_ORPHAN": 1,
+      "SESSION_ACCUMULATION": 1,
+      "SESSION_HIJACK": 2,
+      "CORRECTLY_REJECTED": 2,
+      "LARGE_RETAIN": 1,
+      "HALF_OPEN": 1,
+      "MASS_SUBSCRIPTION": 1,
+      "UNAUTHORIZED_WILL": 1,
+      "WILL_DELIVERED": 1,
+      "RETAIN_ACCUMULATION": 1,
+      "RETAIN_POISON_DELIVERED": 1,
+      "VERSION_DISCLOSURE": 1
+    }
+  },
+  "test_results": [
+    {
+      "name": "auth_null_username",
+      "category": "AUTH_BYPASS",
+      "description": "Null byte prefix in username",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "None"
+      ],
+      "anomaly": true,
+      "anomaly_type": "NO_RESPONSE",
+      "anomaly_detail": "No CONNACK \u2014 Null byte prefix in username",
+      "broker_alive": true,
+      "timing_ms": 2.0673274993896484,
+      "metadata": {}
+    },
+    {
+      "name": "auth_null_password",
+      "category": "AUTH_BYPASS",
+      "description": "Null byte in password",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: Null byte in password",
+      "broker_alive": true,
+      "timing_ms": 1.6481876373291016,
+      "metadata": {}
+    },
+    {
+      "name": "auth_empty_user_pass",
+      "category": "AUTH_BYPASS",
+      "description": "Empty username and password",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: Empty username and password",
+      "broker_alive": true,
+      "timing_ms": 1.4967918395996094,
+      "metadata": {}
+    },
+    {
+      "name": "auth_very_long_user",
+      "category": "AUTH_BYPASS",
+      "description": "Max-length username (65535 bytes)",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: Max-length username (65535 bytes)",
+      "broker_alive": true,
+      "timing_ms": 1.7290115356445312,
+      "metadata": {}
+    },
+    {
+      "name": "auth_very_long_pass",
+      "category": "AUTH_BYPASS",
+      "description": "Max-length password (65535 bytes)",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: Max-length password (65535 bytes)",
+      "broker_alive": true,
+      "timing_ms": 1.3751983642578125,
+      "metadata": {}
+    },
+    {
+      "name": "auth_unicode_user",
+      "category": "AUTH_BYPASS",
+      "description": "Unicode credentials",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: Unicode credentials",
+      "broker_alive": true,
+      "timing_ms": 0.701904296875,
+      "metadata": {}
+    },
+    {
+      "name": "auth_sql_inject_user",
+      "category": "AUTH_BYPASS",
+      "description": "SQL injection in username",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: SQL injection in username",
+      "broker_alive": true,
+      "timing_ms": 0.6318092346191406,
+      "metadata": {}
+    },
+    {
+      "name": "auth_format_string",
+      "category": "AUTH_BYPASS",
+      "description": "Format string in username",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "AUTH_ACCEPTED_ANOMALY",
+      "anomaly_detail": "Broker accepted connection with suspicious credentials: Format string in username",
+      "broker_alive": true,
+      "timing_ms": 0.5578994750976562,
+      "metadata": {}
+    },
+    {
+      "name": "auth_newline_user",
+      "category": "AUTH_BYPASS",
+      "description": "CRLF injection in username",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "None"
+      ],
+      "anomaly": true,
+      "anomaly_type": "NO_RESPONSE",
+      "anomaly_detail": "No CONNACK \u2014 CRLF injection in username",
+      "broker_alive": true,
+      "timing_ms": 0.8530616760253906,
+      "metadata": {}
+    },
+    {
+      "name": "auth_password_without_flag",
+      "category": "AUTH_BYPASS",
+      "description": "Password bytes in payload without password bit in connect_flags",
+      "vulnerability_class": "V8_AUTH_BYPASS",
+      "packets_sent": 1,
+      "responses": [
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "",
+      "broker_alive": true,
+      "timing_ms": 0.6020069122314453,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_0",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $share/group1/#",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=3, raw=9003000100)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SHARED_SUB_GRANTED",
+      "anomaly_detail": "Shared subscription '$share/group1/#' granted RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_1",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $share/group1/device/+",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=3, raw=9003000100)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SHARED_SUB_GRANTED",
+      "anomaly_detail": "Shared subscription '$share/group1/device/+' granted RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_2",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $share//test",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=3, raw=9003000100)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SHARED_SUB_GRANTED",
+      "anomaly_detail": "Shared subscription '$share//test' granted RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_3",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $share/g/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=3, raw=9003000100)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SHARED_SUB_GRANTED",
+      "anomaly_detail": "Shared subscription '$share/g/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' granted RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_4",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $SHARE/group1/#",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=3, raw=9003000100)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SHARED_SUB_GRANTED",
+      "anomaly_detail": "Shared subscription '$SHARE/group1/#' granted RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_5",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $share",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "shared_sub_6",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Shared subscription: $share/g",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=3, raw=9003000100)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SHARED_SUB_GRANTED",
+      "anomaly_detail": "Shared subscription '$share/g' granted RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "topic_alias_0",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Topic alias=0: zero alias \u2014 invalid per spec \u00a73.3.2.3.4",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "topic_alias_1",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Topic alias=1: first valid alias",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "topic_alias_65535",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Topic alias=65535: maximum alias value",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "topic_alias_65534",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Topic alias=65534: one below max",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "topic_alias_exceed_max",
+      "category": "TOPIC_NAMESPACE",
+      "description": "Topic alias 100 exceeds declared maximum of 5 \u2014 spec \u00a73.3.2.3.4 violation",
+      "vulnerability_class": "V9_TOPIC_NAMESPACE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker tolerated alias overflow",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "sys_topic_enumeration",
+      "category": "TOPIC_NAMESPACE",
+      "description": "$SYS/# subscription exposed 2 system topics",
+      "vulnerability_class": "V6_SYS_TOPIC_EXPOSURE",
+      "packets_sent": 2,
+      "responses": [
+        "Received 2 $SYS messages"
+      ],
+      "anomaly": true,
+      "anomaly_type": "INFO_DISCLOSURE",
+      "anomaly_detail": "Topics exposed: ['$SYS/broker/version', '$SYS/broker/load/connections/5min']",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "sys_topics_found": [
+          "$SYS/broker/version",
+          "$SYS/broker/load/connections/5min"
+        ]
+      }
+    },
+    {
+      "name": "pubrel_storm_orphan_ids",
+      "category": "QOS_ATTACK",
+      "description": "PUBREL for non-existent packet IDs: [1, 32767, 65535, 256, 4660]",
+      "vulnerability_class": "V10_QOS_ATTACK",
+      "packets_sent": 6,
+      "responses": [
+        "MQTTResponse(PUBCOMP, flags=0x00, payload_len=2, raw=70020001)",
+        "MQTTResponse(PUBCOMP, flags=0x00, payload_len=2, raw=70027fff)",
+        "MQTTResponse(PUBCOMP, flags=0x00, payload_len=2, raw=7002ffff)",
+        "MQTTResponse(PUBCOMP, flags=0x00, payload_len=2, raw=70020100)",
+        "MQTTResponse(PUBCOMP, flags=0x00, payload_len=2, raw=70021234)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "PUBREL_ORPHAN",
+      "anomaly_detail": "Broker processed 5 orphan PUBRELs without error",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "publish_qos1_pid_zero",
+      "category": "QOS_ATTACK",
+      "description": "QoS 1 PUBLISH with packet_id=0 (invalid per spec \u00a72.3.1)",
+      "vulnerability_class": "V10_QOS_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker tolerated PID=0 PUBLISH",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "qos2_duplicate_inject",
+      "category": "QOS_ATTACK",
+      "description": "QoS 2 duplicate PUBLISH injection before PUBCOMP",
+      "vulnerability_class": "V5_QOS2_TIMING",
+      "packets_sent": 3,
+      "responses": [
+        "MQTTResponse(PUBLISH, flags=0x00, payload_len=28, raw=301c000d746573742f716f73325f6475706475706c69636174655f6d7367)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "QOS2_HANDLED_CORRECTLY",
+      "anomaly_detail": "Observer received exactly 1 message",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "observer_message_count": 1
+      }
+    },
+    {
+      "name": "qos1_inflight_flood",
+      "category": "QOS_ATTACK",
+      "description": "QoS 1 in-flight flood: 200 messages without PUBACK",
+      "vulnerability_class": "V10_QOS_ATTACK",
+      "packets_sent": 200,
+      "responses": [],
+      "anomaly": false,
+      "anomaly_type": "INFLIGHT_FLOOD",
+      "anomaly_detail": "Sent 200 QoS 1 msgs without PUBACK \u2014 broker survived",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "msgs_sent": 200
+      }
+    },
+    {
+      "name": "puback_flood_phantom",
+      "category": "QOS_ATTACK",
+      "description": "PUBACK flood for 50 non-existent QoS 1 packets",
+      "vulnerability_class": "V10_QOS_ATTACK",
+      "packets_sent": 51,
+      "responses": [],
+      "anomaly": false,
+      "anomaly_type": "PUBACK_ORPHAN",
+      "anomaly_detail": "Broker tolerated phantom PUBACKs",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "qos_downgrade_delivery",
+      "category": "QOS_ATTACK",
+      "description": "QoS 2 publish \u2192 QoS 0 subscriber (downgrade path)",
+      "vulnerability_class": "V10_QOS_ATTACK",
+      "packets_sent": 3,
+      "responses": [
+        "MQTTResponse(PUBREC, flags=0x00, payload_len=2, raw=50020001)",
+        "MQTTResponse(PUBLISH, flags=0x00, payload_len=28, raw=301c0012746573742f716f735f646f776e6772616465716f73325f6d7367)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Downgrade path tested",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "rapid_connect_disconnect",
+      "category": "SESSION_ATTACK",
+      "description": "Rapid connect/disconnect: 100 cycles in 0.2s (663/s), 100 successful",
+      "vulnerability_class": "V11_SESSION_EXHAUSTION",
+      "packets_sent": 100,
+      "responses": [
+        "100/100 successful, 663 ops/s"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived 100 rapid cycles (663/s)",
+      "broker_alive": true,
+      "timing_ms": 150.84171295166016,
+      "metadata": {
+        "cycles": 100,
+        "successful": 100,
+        "rate_per_sec": 662.9465950976487
+      }
+    },
+    {
+      "name": "persistent_session_exhaust",
+      "category": "SESSION_ATTACK",
+      "description": "Persistent session exhaustion: 50 clients \u00d7 10 topics each",
+      "vulnerability_class": "V11_SESSION_EXHAUSTION",
+      "packets_sent": 50,
+      "responses": [
+        "Created 50 persistent sessions"
+      ],
+      "anomaly": false,
+      "anomaly_type": "SESSION_ACCUMULATION",
+      "anomaly_detail": "Broker accepted 50 persistent sessions with subscriptions",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "persist_clients": 50,
+        "topics_per_client": 10
+      }
+    },
+    {
+      "name": "session_overlap_hijack",
+      "category": "SESSION_ATTACK",
+      "description": "ClientID overlap: attacker reconnects with victim's persistent session ClientID",
+      "vulnerability_class": "V3_CLIENTID_HIJACKING",
+      "packets_sent": 3,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=200201003a3300166465766963652f7365637265742f636f6d6d616e647300015345435245545f434f4d4d414e445f464f525f56494354494d3a3300166465766963652f7365637265742f636f6d6d616e647300025345435245545f434f4d4d414e445f464f525f56494354494d)",
+        "None"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SESSION_HIJACK",
+      "anomaly_detail": "session_present=True, queued_msg=NO",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "session_present": true,
+        "received_queued_msg": false
+      }
+    },
+    {
+      "name": "zero_clientid_persistent",
+      "category": "SESSION_ATTACK",
+      "description": "Zero-length ClientID with clean_session=False \u2014 spec \u00a73.1.3.1 MUST reject with RC=0x02",
+      "vulnerability_class": "V7_ZERO_LENGTH_CLIENTID",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020002)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "CORRECTLY_REJECTED",
+      "anomaly_detail": "CONNACK RC=0x02 \u2014 correctly rejected",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "zero_clientid_clean",
+      "category": "SESSION_ATTACK",
+      "description": "Zero-length ClientID with clean_session=True \u2014 spec \u00a73.1.3.1 SHOULD accept",
+      "vulnerability_class": "V7_ZERO_LENGTH_CLIENTID",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "CONNACK RC=0x00 \u2014 correctly accepted",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "payload_size_1KB",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Large payload: 1KB (1024 bytes)",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "send_ok=True"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived 1KB payload",
+      "broker_alive": true,
+      "timing_ms": 305.0539493560791,
+      "metadata": {
+        "payload_size": 1024,
+        "send_success": true
+      }
+    },
+    {
+      "name": "payload_size_64KB",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Large payload: 64KB (65535 bytes)",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "send_ok=True"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived 64KB payload",
+      "broker_alive": true,
+      "timing_ms": 305.1939010620117,
+      "metadata": {
+        "payload_size": 65535,
+        "send_success": true
+      }
+    },
+    {
+      "name": "payload_size_128KB",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Large payload: 128KB (131072 bytes)",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "send_ok=True"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived 128KB payload",
+      "broker_alive": true,
+      "timing_ms": 305.2489757537842,
+      "metadata": {
+        "payload_size": 131072,
+        "send_success": true
+      }
+    },
+    {
+      "name": "payload_size_1MB",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Large payload: 1MB (1048576 bytes)",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "send_ok=True"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived 1MB payload",
+      "broker_alive": true,
+      "timing_ms": 308.6118698120117,
+      "metadata": {
+        "payload_size": 1048576,
+        "send_success": true
+      }
+    },
+    {
+      "name": "payload_size_10MB",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Large payload: 10MB (10485760 bytes)",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "send_ok=True"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived 10MB payload",
+      "broker_alive": true,
+      "timing_ms": 399.0521430969238,
+      "metadata": {
+        "payload_size": 10485760,
+        "send_success": true
+      }
+    },
+    {
+      "name": "payload_ctrl_bytes_0",
+      "category": "PAYLOAD_ATTACK",
+      "description": "CONNECT packet embedded in payload",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived control-byte payload injection",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "payload_ctrl_bytes_1",
+      "category": "PAYLOAD_ATTACK",
+      "description": "DISCONNECT packet embedded in payload",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived control-byte payload injection",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "payload_ctrl_bytes_2",
+      "category": "PAYLOAD_ATTACK",
+      "description": "PINGREQ embedded in payload",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived control-byte payload injection",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "payload_ctrl_bytes_3",
+      "category": "PAYLOAD_ATTACK",
+      "description": "SUBSCRIBE embedded in payload",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived control-byte payload injection",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "payload_ctrl_bytes_4",
+      "category": "PAYLOAD_ATTACK",
+      "description": "CONNECT header bytes mid-payload",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived control-byte payload injection",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "payload_all_bytes",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Payload with all 256 byte values repeated",
+      "vulnerability_class": "V12_PAYLOAD_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived all-byte payload",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "retain_large_payload",
+      "category": "PAYLOAD_ATTACK",
+      "description": "Retained message with 1MB payload \u2014 storage abuse",
+      "vulnerability_class": "V2_UNAUTHORIZED_RETAIN",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "LARGE_RETAIN",
+      "anomaly_detail": "Broker accepted 1MB retained message",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "retain_size_bytes": 1048576
+      }
+    },
+    {
+      "name": "keepalive_zero",
+      "category": "CONNECTION_ATTACK",
+      "description": "keepalive=0 disables server-side timeout \u2014 connection should persist indefinitely",
+      "vulnerability_class": "V13_CONNECTION_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "keepalive=0 connection still active after 2s",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "still_active_after_2s": true
+      }
+    },
+    {
+      "name": "keepalive_one_rapid_ping",
+      "category": "CONNECTION_ATTACK",
+      "description": "keepalive=1s rapid ping: 5/5 pings acknowledged",
+      "vulnerability_class": "V13_CONNECTION_ATTACK",
+      "packets_sent": 6,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Rapid ping test: 5/5 PINGRESPs received",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "ping_responses": 5
+      }
+    },
+    {
+      "name": "half_open_connections",
+      "category": "CONNECTION_ATTACK",
+      "description": "Half-open TCP connections (no MQTT CONNECT): opened 20/20",
+      "vulnerability_class": "V13_CONNECTION_ATTACK",
+      "packets_sent": 20,
+      "responses": [],
+      "anomaly": false,
+      "anomaly_type": "HALF_OPEN",
+      "anomaly_detail": "Broker tolerated 20 half-open connections",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "half_open_count": 20
+      }
+    },
+    {
+      "name": "connect_flood",
+      "category": "CONNECTION_ATTACK",
+      "description": "CONNECT flood: 50 unique clients in 0.1s, 50 accepted",
+      "vulnerability_class": "V13_CONNECTION_ATTACK",
+      "packets_sent": 50,
+      "responses": [
+        "50/50 accepted"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Flood rate: 783.1/s, 50 accepted",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "flood_count": 50,
+        "successful": 50,
+        "rate_per_sec": 783.1096572789938
+      }
+    },
+    {
+      "name": "double_connect_same_tcp",
+      "category": "CONNECTION_ATTACK",
+      "description": "Send CONNECT twice on same TCP connection without disconnect",
+      "vulnerability_class": "V13_CONNECTION_ATTACK",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)",
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Second CONNECT correctly rejected/ignored",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "subscribe_many_topics",
+      "category": "SUBSCRIPTION_ABUSE",
+      "description": "Subscribe to 200 distinct topics: 200 accepted",
+      "vulnerability_class": "V14_SUB_ABUSE",
+      "packets_sent": 201,
+      "responses": [
+        "200/200 subscriptions accepted"
+      ],
+      "anomaly": false,
+      "anomaly_type": "MASS_SUBSCRIPTION",
+      "anomaly_detail": "Broker accepted 200/200 subscriptions",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "subs_attempted": 200,
+        "subs_accepted": 200
+      }
+    },
+    {
+      "name": "subscribe_duplicate",
+      "category": "SUBSCRIPTION_ABUSE",
+      "description": "Duplicate subscription to same topic 50 times \u2014 received 1 copies of 1 publish",
+      "vulnerability_class": "V14_SUB_ABUSE",
+      "packets_sent": 51,
+      "responses": [
+        "1 message copies received"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Received 1 copies for 1 publish on 50 duplicate subs",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "duplicate_subs": 50,
+        "copies_received": 1
+      }
+    },
+    {
+      "name": "wildcard_eavesdrop_confirm",
+      "category": "SUBSCRIPTION_ABUSE",
+      "description": "Wildcard '#' eavesdrop on 0/3 target topics",
+      "vulnerability_class": "V4_TOPIC_AUTH_BYPASS",
+      "packets_sent": 4,
+      "responses": [
+        "Collected: ['home/devices/thermostat']"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Wildcard subscriber intercepted: []",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "topics_intercepted": [],
+        "total_collected": 1
+      }
+    },
+    {
+      "name": "sys_metrics_exposure",
+      "category": "SUBSCRIPTION_ABUSE",
+      "description": "$SYS/# subscription: 2 broker metrics exposed to unauthenticated client",
+      "vulnerability_class": "V6_SYS_TOPIC_EXPOSURE",
+      "packets_sent": 2,
+      "responses": [
+        "Exposed: ['$SYS/broker/version', '$SYS/broker/load/connections/5min']"
+      ],
+      "anomaly": true,
+      "anomaly_type": "INFO_DISCLOSURE",
+      "anomaly_detail": "Metrics exposed: 2 topics. Version: mosquitto version 2.0.18",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "sys_metrics": {
+          "$SYS/broker/version": "mosquitto version 2.0.18",
+          "$SYS/broker/load/connections/5min": "128.18"
+        }
+      }
+    },
+    {
+      "name": "mqtt5_user_props_bomb",
+      "category": "MQTT5_SPECIFIC",
+      "description": "MQTT 5.0 User Properties bomb: 50 \u00d7 2KB key-value pairs in CONNECT",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 1,
+      "responses": [
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker survived user properties bomb",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "prop_count": 50,
+        "prop_size_bytes": 100000
+      }
+    },
+    {
+      "name": "mqtt5_sub_id_0",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Subscription Identifier=0 (0 and >268435455 invalid per spec \u00a73.8.2.1.2)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)",
+        "MQTTResponse(DISCONNECT, flags=0x00, payload_len=1, raw=e00181)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled sub ID=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_sub_id_1",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Subscription Identifier=1 (0 and >268435455 invalid per spec \u00a73.8.2.1.2)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=4, raw=900400010000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled sub ID=1",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_sub_id_268435455",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Subscription Identifier=268435455 (0 and >268435455 invalid per spec \u00a73.8.2.1.2)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=4, raw=900400010000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled sub ID=268435455",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_sub_id_268435456",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Subscription Identifier=268435456 (0 and >268435455 invalid per spec \u00a73.8.2.1.2)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=4, raw=900400010000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled sub ID=268435456",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_sub_id_268435455",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Subscription Identifier=268435455 (0 and >268435455 invalid per spec \u00a73.8.2.1.2)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)",
+        "MQTTResponse(SUBACK, flags=0x00, payload_len=4, raw=900400010000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled sub ID=268435455",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_auth_no_connect",
+      "category": "MQTT5_SPECIFIC",
+      "description": "AUTH packet sent before CONNECT (protocol violation)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 1,
+      "responses": [
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled premature AUTH packet",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_max_packet_exceed",
+      "category": "MQTT5_SPECIFIC",
+      "description": "PUBLISH 1000B when client declared MaxPacketSize=128 in CONNECT",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200900000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled max packet size violation",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_session_expiry_max",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Session Expiry Interval=0xFFFFFFFF (4294967295s \u2248 136 years) \u2014 memory leak risk",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=9, raw=200901000622000a210014)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "CONNACK RC=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "mqtt5_receive_max_zero",
+      "category": "MQTT5_SPECIFIC",
+      "description": "Receive Maximum=0 in CONNECT (invalid per MQTT 5.0 \u00a73.1.2.11.4)",
+      "vulnerability_class": "V15_MQTT5",
+      "packets_sent": 1,
+      "responses": [
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker handled Receive Maximum=0",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "auth_timing_sidechannel",
+      "category": "INFO_LEAKAGE",
+      "description": "Authentication timing: valid avg=1.15ms, invalid avg=0.70ms, diff=0.45ms",
+      "vulnerability_class": "V16_INFO_LEAKAGE",
+      "packets_sent": 40,
+      "responses": [
+        "valid_times=[1.0880420013563707, 1.3494999984686729, 1.3973330023873132, 1.154834000772098, 2.054249998764135]",
+        "invalid_times=[1.5104170015547425, 0.6051660020602867, 0.6198329974722583, 0.6827500001236331, 0.7273749979503918]"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Timing difference of 0.45ms within 5ms threshold",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "avg_valid_ms": 1.151800150546478,
+        "avg_invalid_ms": 0.6975749001867371,
+        "diff_ms": 0.45422525035974104,
+        "iterations": 20
+      }
+    },
+    {
+      "name": "connack_session_present_oracle",
+      "category": "INFO_LEAKAGE",
+      "description": "CONNACK session_present bit reveals whether a ClientID has an existing session",
+      "vulnerability_class": "V16_INFO_LEAKAGE",
+      "packets_sent": 3,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020100)",
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020100)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Existing ID session_present=True, Non-existent ID session_present=True. No difference",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "existing_sp": true,
+        "nonexist_sp": true
+      }
+    },
+    {
+      "name": "sys_client_count_exposure",
+      "category": "INFO_LEAKAGE",
+      "description": "$SYS/broker/clients/+ exposes 1 client count metrics",
+      "vulnerability_class": "V6_SYS_TOPIC_EXPOSURE",
+      "packets_sent": 2,
+      "responses": [
+        "Metrics: {'$SYS/broker/clients/total': '56'}"
+      ],
+      "anomaly": true,
+      "anomaly_type": "INFO_DISCLOSURE",
+      "anomaly_detail": "Client metrics exposed: {'$SYS/broker/clients/total': '56'}",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "client_metrics": {
+          "$SYS/broker/clients/total": "56"
+        }
+      }
+    },
+    {
+      "name": "error_message_analysis",
+      "category": "INFO_LEAKAGE",
+      "description": "Error response analysis: 1 error responses captured",
+      "vulnerability_class": "V16_INFO_LEAKAGE",
+      "packets_sent": 3,
+      "responses": [
+        "Error responses: {'invalid_proto': '20020001'}"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Error responses: {'invalid_proto': '20020001'}",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "error_responses": {
+          "invalid_proto": "20020001"
+        }
+      }
+    },
+    {
+      "name": "inflight_limit_probe",
+      "category": "CONFIG_FINGERPRINT",
+      "description": "In-flight message limit probe: 30/30 QoS 1 messages acknowledged",
+      "vulnerability_class": "V17_CONFIG_FINGERPRINT",
+      "packets_sent": 31,
+      "responses": [
+        "30/30 ACKed"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Observed in-flight limit: at least 30 messages processed",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "acked": 30,
+        "attempted": 30
+      }
+    },
+    {
+      "name": "max_queued_messages_probe",
+      "category": "CONFIG_FINGERPRINT",
+      "description": "Max queued messages: sent 200 QoS 1, offline client received 0 on reconnect",
+      "vulnerability_class": "V17_CONFIG_FINGERPRINT",
+      "packets_sent": 202,
+      "responses": [
+        "0/200 delivered on reconnect"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Queue limit appears to be ~0 messages (sent 200)",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "sent": 200,
+        "received_on_reconnect": 0,
+        "implied_queue_limit": 0
+      }
+    },
+    {
+      "name": "message_size_limit_probe",
+      "category": "CONFIG_FINGERPRINT",
+      "description": "Message size limit: max accepted payload = 10,485,760 bytes",
+      "vulnerability_class": "V17_CONFIG_FINGERPRINT",
+      "packets_sent": 6,
+      "responses": [
+        "{1024: True, 4096: True, 65535: True, 262144: True, 1048576: True, 10485760: True}"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker accepts payloads up to 10,485,760 bytes",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "size_tests": {
+          "1024": true,
+          "4096": true,
+          "65535": true,
+          "262144": true,
+          "1048576": true,
+          "10485760": true
+        },
+        "max_accepted": 10485760
+      }
+    },
+    {
+      "name": "connection_limit_probe",
+      "category": "CONFIG_FINGERPRINT",
+      "description": "Simultaneous connection limit: held 50 concurrent connections",
+      "vulnerability_class": "V17_CONFIG_FINGERPRINT",
+      "packets_sent": 50,
+      "responses": [
+        "max_concurrent=50"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker accepted at least 50 simultaneous connections",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "max_concurrent": 50
+      }
+    },
+    {
+      "name": "topic_length_limit_probe",
+      "category": "CONFIG_FINGERPRINT",
+      "description": "Topic length limit: max accepted = 65535 chars",
+      "vulnerability_class": "V17_CONFIG_FINGERPRINT",
+      "packets_sent": 5,
+      "responses": [
+        "max_topic_len=65535"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Max topic length accepted: 65535 characters",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "max_topic_len": 65535
+      }
+    },
+    {
+      "name": "will_topic_namespace_attack",
+      "category": "WILL_ATTACK",
+      "description": "Will message delivery to 5/6 targeted topics",
+      "vulnerability_class": "V1_UNAUTHORIZED_WILL",
+      "packets_sent": 12,
+      "responses": [
+        "Delivered: ['restricted/admin', 'commands/all', 'alerts/critical', 'internal/control', 'user/1/commands']"
+      ],
+      "anomaly": true,
+      "anomaly_type": "UNAUTHORIZED_WILL",
+      "anomaly_detail": "Will messages delivered to: ['restricted/admin', 'commands/all', 'alerts/critical', 'internal/control', 'user/1/commands'] without authorization",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "targets": [
+          "restricted/admin",
+          "commands/all",
+          "alerts/critical",
+          "internal/control",
+          "$SYS/test",
+          "user/1/commands"
+        ],
+        "delivered": [
+          "restricted/admin",
+          "commands/all",
+          "alerts/critical",
+          "internal/control",
+          "user/1/commands"
+        ]
+      }
+    },
+    {
+      "name": "will_qos2_retained",
+      "category": "WILL_ATTACK",
+      "description": "Will message with QoS=2 and retain=True",
+      "vulnerability_class": "V1_UNAUTHORIZED_WILL",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(PUBLISH, flags=0x01, payload_len=34, raw=3122000e66757a7a2f77696c6c5f716f733257494c4c5f514f53325f52455441494e45443022000e66757a7a2f77696c6c5f716f733257494c4c5f514f53325f52455441494e4544)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "WILL_DELIVERED",
+      "anomaly_detail": "Will with QoS2+retain delivered",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "will_large_payload",
+      "category": "WILL_ATTACK",
+      "description": "Will message with 64KB payload",
+      "vulnerability_class": "V1_UNAUTHORIZED_WILL",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Broker accepted 64KB will message",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "will_size": 65535
+      }
+    },
+    {
+      "name": "retained_message_bomb",
+      "category": "RETAINED_ATTACK",
+      "description": "Retained message bomb: 500 retained messages published",
+      "vulnerability_class": "V2_UNAUTHORIZED_RETAIN",
+      "packets_sent": 500,
+      "responses": [
+        "500 retained messages created"
+      ],
+      "anomaly": false,
+      "anomaly_type": "RETAIN_ACCUMULATION",
+      "anomaly_detail": "Broker stored 500 retained messages",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {
+        "retained_count": 500
+      }
+    },
+    {
+      "name": "retained_delete_test",
+      "category": "RETAINED_ATTACK",
+      "description": "Retained message deletion via empty payload",
+      "vulnerability_class": "V2_UNAUTHORIZED_RETAIN",
+      "packets_sent": 3,
+      "responses": [
+        "None"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "Retained message deletion succeeded",
+      "broker_alive": true,
+      "timing_ms": 0.0,
+      "metadata": {}
+    },
+    {
+      "name": "targeted_retain_poison_confirm",
+      "category": "TARGETED",
+      "description": "Explicit retained message poisoning: attacker publishes, later subscriber receives",
+      "vulnerability_class": "V2_UNAUTHORIZED_RETAIN",
+      "packets_sent": 3,
+      "responses": [
+        "MQTTResponse(PUBLISH, flags=0x01, payload_len=94, raw=315e000e66757a7a2f706f69736f6e5f633243414d504149474e325f41545441434b45525f52455441494e45445f4141414141414141414141414141414141414141414141414141414141414141414141414141414141414141414141414141)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "RETAIN_POISON_DELIVERED",
+      "anomaly_detail": "Poisoned payload delivered to new subscriber: b'CAMPAIGN2_ATTACKER_RETAINED_AAAAAAAAAAAA'",
+      "broker_alive": true,
+      "timing_ms": 0,
+      "metadata": {
+        "poison_topic": "fuzz/poison_c2",
+        "payload_size": 78
+      }
+    },
+    {
+      "name": "targeted_session_hijack_confirm",
+      "category": "TARGETED",
+      "description": "Explicit ClientID session hijacking: attacker steals persistent session and queued messages",
+      "vulnerability_class": "V3_CLIENTID_HIJACKING",
+      "packets_sent": 4,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=200201003a2d00116465766963652f63322f7365637265747300015345435245545f4d53475f464f525f56494354494d5f4332)",
+        "None"
+      ],
+      "anomaly": true,
+      "anomaly_type": "SESSION_HIJACK",
+      "anomaly_detail": "session_present=True, queued_msg_received=False",
+      "broker_alive": true,
+      "timing_ms": 0,
+      "metadata": {
+        "victim_id": "c2_victim_789",
+        "session_hijacked": true,
+        "queued_msg_received": false
+      }
+    },
+    {
+      "name": "targeted_zero_clientid_persistent",
+      "category": "TARGETED",
+      "description": "Zero-length ClientID with persistent session \u2014 MQTT 3.1.1 \u00a73.1.3.1 MUST reject",
+      "vulnerability_class": "V7_ZERO_LENGTH_CLIENTID",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020002)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "CORRECTLY_REJECTED",
+      "anomaly_detail": "CONNACK RC=0x02 \u2014 correctly rejected",
+      "broker_alive": true,
+      "timing_ms": 0,
+      "metadata": {
+        "connack_rc": 2,
+        "spec_says": "MUST reject with 0x02"
+      }
+    },
+    {
+      "name": "targeted_zero_clientid_clean",
+      "category": "TARGETED",
+      "description": "Zero-length ClientID with clean session \u2014 should be accepted per spec",
+      "vulnerability_class": "V7_ZERO_LENGTH_CLIENTID",
+      "packets_sent": 1,
+      "responses": [
+        "MQTTResponse(CONNACK, flags=0x00, payload_len=2, raw=20020000)"
+      ],
+      "anomaly": false,
+      "anomaly_type": "",
+      "anomaly_detail": "CONNACK RC=0 \u2014 accepted as expected",
+      "broker_alive": true,
+      "timing_ms": 0,
+      "metadata": {
+        "connack_rc": 0
+      }
+    },
+    {
+      "name": "targeted_sys_version_disclosure",
+      "category": "TARGETED",
+      "description": "$SYS/broker/version exposes exact broker version string to unauthenticated client",
+      "vulnerability_class": "V6_SYS_TOPIC_EXPOSURE",
+      "packets_sent": 2,
+      "responses": [
+        "MQTTResponse(PUBLISH, flags=0x01, payload_len=45, raw=312d0013245359532f62726f6b65722f76657273696f6e6d6f7371756974746f2076657273696f6e20322e302e3138)"
+      ],
+      "anomaly": true,
+      "anomaly_type": "VERSION_DISCLOSURE",
+      "anomaly_detail": "Version disclosed: 'mosquitto version 2.0.18'",
+      "broker_alive": true,
+      "timing_ms": 0,
+      "metadata": {
+        "broker_version": "mosquitto version 2.0.18"
+      }
+    }
+  ]
+}

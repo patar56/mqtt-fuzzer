@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0.18
+    container_name: mqtt_target_broker
+    ports:
+      - "1883:1883"   # MQTT
+      - "9001:9001"   # WebSocket
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - mosquitto_data:/mosquitto/data
+      - mosquitto_log:/mosquitto/log
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "mosquitto_sub", "-t", "$$SYS/#", "-C", "1", "-i", "healthcheck", "-W", "3"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - mqtt_research_net
+
+  # Secondary broker for cross-broker attack tests
+  aedes:
+    image: node:20-alpine
+    container_name: mqtt_aedes_broker
+    working_dir: /app
+    volumes:
+      - ./aedes:/app
+    command: sh -c "npm install && node server.js"
+    ports:
+      - "1884:1884"
+    networks:
+      - mqtt_research_net
+    profiles:
+      - extended  # Only launched with --profile extended
+
+networks:
+  mqtt_research_net:
+    driver: bridge
+
+volumes:
+  mosquitto_data:
+  mosquitto_log:

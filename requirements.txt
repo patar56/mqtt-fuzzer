@@ -1,0 +1,13 @@
+anthropic>=0.25.0
+paho-mqtt>=2.0.0
+docker>=7.0.0
+asyncio-mqtt>=0.16.2
+scapy>=2.5.0
+rich>=13.7.0
+pydantic>=2.6.0
+colorlog>=6.8.2
+python-dotenv>=1.0.1
+structlog>=24.1.0
+click>=8.1.7
+aiofiles>=23.2.1
+numpy>=1.26.4

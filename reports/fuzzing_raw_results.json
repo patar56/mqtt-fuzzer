@@ -1,0 +1,194 @@
+{
+  "campaign_metadata": {
+    "date": "2026-05-05",
+    "broker": "Eclipse Mosquitto 2.0.18",
+    "broker_container": "mqtt_target_broker",
+    "broker_port": 1883,
+    "broker_config": "permissive (no ACL, anonymous access, retained_persistence=true)",
+    "protocol_scope": "MQTT 3.1.1",
+    "tool": "MQTT Security Agent (custom Python fuzzer)"
+  },
+  "fuzzing_statistics": {
+    "generation_campaign": {
+      "total_tests": 85,
+      "anomalies": 22,
+      "anomaly_rate": "25.9%",
+      "crashes": 0,
+      "anomaly_types": { "NO_RESPONSE": 22 },
+      "categories": {
+        "connect_variants": 29,
+        "publish_variants": 23,
+        "subscribe_variants": 18,
+        "malformed_packets": 15
+      }
+    },
+    "mutation_campaign": {
+      "total_tests": 200,
+      "anomalies": 96,
+      "anomaly_rate": "48.0%",
+      "crashes": 0,
+      "anomaly_types": { "NO_RESPONSE": 96 },
+      "seeds": ["valid_connect", "valid_subscribe", "valid_publish_qos0", "valid_publish_qos1"],
+      "mutations_per_seed": 50,
+      "mutation_operators": ["bit_flip_1", "bit_flip_4", "byte_replace", "boundary_byte", "insert_1", "insert_4", "delete_1", "delete_4"]
+    },
+    "combined": {
+      "total_tests": 285,
+      "anomalies": 118,
+      "anomaly_rate": "41.4%",
+      "crashes": 0
+    },
+    "extended_state_machine": {
+      "total_tests": 21,
+      "anomalies": 5,
+      "categories": ["out_of_order_sequences", "connect_field_boundaries", "qos_edge_cases", "topic_edge_cases", "auth_edge_cases"]
+    }
+  },
+  "targeted_attack_results": [
+    {
+      "vulnerability_id": "V1_UNAUTHORIZED_WILL",
+      "vulnerability_name": "Unauthorized Will Message Exploitation",
+      "result": "VULNERABLE",
+      "confidence": "HIGH",
+      "cvss_estimate": 7.5,
+      "cwe": "CWE-284",
+      "evidence": [
+        "Attacker connected with Will targeting 'restricted/admin'",
+        "TCP closed without DISCONNECT — Will delivery triggered",
+        "Observer received: topic='restricted/admin' payload='UNAUTHORIZED_WILL_FROM_ATTACKER'",
+        "Confirmed on topics: restricted/admin, commands/all, alerts/critical",
+        "$SYS/test Will correctly blocked by Mosquitto"
+      ],
+      "mitigation": "Enable ACL with per-client will_topic restrictions. Require authentication."
+    },
+    {
+      "vulnerability_id": "V2_UNAUTHORIZED_RETAIN",
+      "vulnerability_name": "Unauthorized Retained Message Exploitation",
+      "result": "VULNERABLE",
+      "confidence": "HIGH",
+      "cvss_estimate": 6.5,
+      "cwe": "CWE-284",
+      "evidence": [
+        "Attacker published retained message to fuzz/retain_test",
+        "Attacker disconnected",
+        "New subscriber received POISONED_BY_ATTACKER_AAAA... payload",
+        "Payload exact match confirmed"
+      ],
+      "mitigation": "Enable ACL with topic write restrictions. Consider retained_persistence false."
+    },
+    {
+      "vulnerability_id": "V3_CLIENTID_HIJACKING",
+      "vulnerability_name": "ClientID Session Hijacking",
+      "result": "VULNERABLE",
+      "confidence": "MEDIUM",
+      "cvss_estimate": 8.1,
+      "cwe": "CWE-287",
+      "evidence": [
+        "Victim connected with ClientID=victim_device_001, clean_session=False",
+        "Attacker connected with same ClientID",
+        "CONNACK session_present=1 (attacker received victim's session)",
+        "Victim's connection terminated by broker"
+      ],
+      "mitigation": "Require authentication. Bind ClientID to credentials."
+    },
+    {
+      "vulnerability_id": "V4_TOPIC_AUTH_BYPASS",
+      "vulnerability_name": "Topic Authorization Bypass via Wildcards",
+      "result": "VULNERABLE",
+      "confidence": "HIGH",
+      "cvss_estimate": 7.2,
+      "cwe": "CWE-862",
+      "evidence": [
+        "Wildcard '#' subscription GRANTED to unauthenticated client",
+        "Attacker received messages from home/devices/thermostat",
+        "Attacker received messages from alerts/all",
+        "Full traffic eavesdropping capability confirmed"
+      ],
+      "mitigation": "Enable ACL. Explicit topic read permissions. Deny wildcard subs for anon clients."
+    },
+    {
+      "vulnerability_id": "V5_QOS2_TIMING",
+      "vulnerability_name": "QoS 2 Duplicate Message Injection",
+      "result": "NOT_VULNERABLE",
+      "confidence": "MEDIUM",
+      "evidence": [
+        "Duplicate PUBLISH (dup=True, same packet_id=1) sent before PUBREL",
+        "Broker responded with second PUBREC (deduplication working)",
+        "Observer received exactly 1 message (correct)",
+        "Mosquitto correctly deduplicates QoS 2 packets"
+      ],
+      "mitigation": "N/A - Mosquitto 2.0.18 handles correctly"
+    },
+    {
+      "vulnerability_id": "V6_SYS_TOPIC_EXPOSURE",
+      "vulnerability_name": "$SYS Topic Information Disclosure",
+      "result": "VULNERABLE",
+      "confidence": "HIGH",
+      "cvss_estimate": 4.3,
+      "cwe": "CWE-200",
+      "evidence": [
+        "$SYS/broker/version = mosquitto version 2.0.18",
+        "$SYS/broker/uptime = 153 seconds",
+        "$SYS/broker/clients/total = 1",
+        "$SYS/broker/clients/maximum = 1",
+        "30+ additional $SYS topics disclosed"
+      ],
+      "mitigation": "ACL deny $SYS/# for anonymous. Or sys_interval 0 in config."
+    },
+    {
+      "vulnerability_id": "V7_ZERO_LENGTH_CLIENTID",
+      "vulnerability_name": "Zero-Length ClientID Spec Violation",
+      "result": "NOT_VULNERABLE",
+      "confidence": "HIGH",
+      "evidence": [
+        "CONNECT empty ClientID, clean_session=False -> CONNACK 0x02 (Identifier Rejected) - CORRECT",
+        "CONNECT empty ClientID, clean_session=True -> CONNACK 0x00 (Accepted) - CORRECT",
+        "CONNECT null byte in ClientID -> Connection dropped - CORRECT"
+      ],
+      "mitigation": "N/A - Mosquitto 2.0.18 spec-compliant"
+    }
+  ],
+  "notable_extended_findings": [
+    {
+      "test_id": "C3_orphan_pubrel",
+      "description": "PUBREL for unknown packet_id=9999 receives PUBCOMP response",
+      "anomaly": true,
+      "detail": "Spec-compliant per §4.3.3 but creates exploitable phantom session state",
+      "severity": "LOW"
+    },
+    {
+      "test_id": "C4_stray_pubrec",
+      "description": "Client-sent PUBREC for unknown packet_id triggers broker PUBREL response",
+      "anomaly": true,
+      "detail": "Broker enters QoS 2 handshake for non-existent message — state management concern",
+      "severity": "LOW"
+    },
+    {
+      "test_id": "D3_publish_to_sys_topic",
+      "description": "PUBLISH to $SYS topics silently denied (no error response)",
+      "anomaly": false,
+      "detail": "Correct behavior confirmed in broker logs: 'Denied PUBLISH from mqtt_agent_fuzz ($SYS/test)'",
+      "severity": "INFORMATIONAL"
+    }
+  ],
+  "protocol_conformance": {
+    "empty_clientid_persistent_rejected": true,
+    "empty_clientid_clean_accepted": true,
+    "invalid_protocol_version_refused": true,
+    "publish_before_connect_dropped": true,
+    "double_connect_disconnects": true,
+    "wildcard_publish_rejected": true,
+    "invalid_protocol_name_rejected": true,
+    "overlong_varint_rejected": true,
+    "qos3_publish_rejected": true,
+    "will_qos3_rejected": true,
+    "overall_spec_compliance": "HIGH"
+  },
+  "broker_stability": {
+    "crashes_during_campaign": 0,
+    "final_state": "healthy",
+    "final_cpu": "0.12%",
+    "final_memory": "21.4 MiB",
+    "total_packets_sent": "~500+"
+  }
+}

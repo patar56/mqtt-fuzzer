@@ -276,23 +276,4 @@ python -m pytest tests/ -v
 # 37 passed (protocol packet encoding)
 ```
 
----
 
-## Course Deliverables
-
-| Deliverable | Location |
-|---|---|
-| Code repository | This repo |
-| Agent design document | `AGENT_DESIGN.md` |
-| AI interaction log | `reports/ai_conversation_log.md` |
-| Final campaign report | `reports/fuzzing_final_campaign_report.md` |
-| Definitive vulnerability catalog | `reports/vulnerability_report_final.md` |
-| Cross-broker analysis | `reports/multi_broker_final_report.md` |
-| Mitigation guide | `reports/mitigations_campaign3.md` |
-| All campaign reports | `reports/fuzzing_campaign*.md` |
-| Hardened configs | `config/*_hardened_final.conf` |
-| Figures | `reports/figures/*.png` |
-
----
-
-*UCLA ECE 202C IoT Security — Prof. Nader Sehatbakhsh*
